@@ -1,5 +1,3 @@
-
-
 import pymongo
 import sys
 
@@ -10,7 +8,6 @@ import sys
 
 # connnecto to the db on standard port
 connection = pymongo.MongoClient("mongodb://localhost")
-
 
 
 db = connection.m101                 # attach to db
@@ -30,5 +27,3 @@ except Exception as e:
 
 
 print "The answer to Homework One, Problem 2 is " + str(int(magic))
-
-

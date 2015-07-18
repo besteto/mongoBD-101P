@@ -22,7 +22,8 @@ import random
 import string
 
 
-# The session Data Access Object handles interactions with the sessions collection
+# The session Data Access Object handles interactions with the sessions
+# collection
 
 class SessionDAO:
 
@@ -65,7 +66,8 @@ class SessionDAO:
 
         return session
 
-    # get the username of the current session, or None if the session is not valid
+    # get the username of the current session, or None if the session is not
+    # valid
     def get_username(self, session_id):
 
         session = self.get_session(session_id)

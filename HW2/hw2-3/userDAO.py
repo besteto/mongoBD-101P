@@ -23,7 +23,8 @@ import hashlib
 import pymongo
 
 
-# The User Data Access Object handles all interactions with the User collection.
+# The User Data Access Object handles all interactions with the User
+# collection.
 class UserDAO:
 
     def __init__(self, db):
@@ -43,10 +44,10 @@ class UserDAO:
     # HASH(pw + salt),salt
     # use sha256
 
-    def make_pw_hash(self, pw,salt=None):
+    def make_pw_hash(self, pw, salt=None):
         if salt == None:
-            salt = self.make_salt();
-        return hashlib.sha256(pw + salt).hexdigest()+","+ salt
+            salt = self.make_salt()
+        return hashlib.sha256(pw + salt).hexdigest()+"," + salt
 
     # Validates a user login. Returns user record or None
     def validate_login(self, username, password):
@@ -54,10 +55,10 @@ class UserDAO:
         user = None
         try:
             # XXX HW 2.3 Students Work Here
-            # you will need to retrieve right document from the users collection.
-            user = self.users.find_one({'_id':username})
+            # you will need to retrieve right document from the users
+            # collection.
+            user = self.users.find_one({'_id': username})
 
-            
             print "This space intentionally left blank."
         except:
             print "Unable to query database for user"
@@ -75,7 +76,6 @@ class UserDAO:
         # Looks good
         return user
 
-
     # creates a new user in the users collection
     def add_user(self, username, password, email):
         password_hash = self.make_pw_hash(password)
@@ -90,7 +90,6 @@ class UserDAO:
             # Don't over think this one, it's a straight forward insert.
             self.users.insert_one(user)
 
-
             print "This space intentionally left blank."
 
         except pymongo.errors.OperationFailure:
@@ -101,5 +100,3 @@ class UserDAO:
             return False
 
         return True
-
-

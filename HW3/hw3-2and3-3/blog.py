@@ -17,7 +17,6 @@
 #
 
 
-
 import pymongo
 import blogPostDAO
 import sessionDAO
@@ -25,7 +24,6 @@ import userDAO
 import bottle
 import cgi
 import re
-
 
 
 __author__ = 'aje'
@@ -37,7 +35,8 @@ __author__ = 'aje'
 # allow you to modify a function, adding code to be executed before and after the function. As a side effect
 # the bottle.py decorators also put each callback into a route table.
 
-# These are the routes that the blog must handle. They are decorated using bottle.py
+# These are the routes that the blog must handle. They are decorated using
+# bottle.py
 
 # This route is the main page of the blog
 @bottle.route('/')
@@ -105,7 +104,8 @@ def post_new_comment():
 
     else:
 
-        # it all looks good, insert the comment into the blog post and redirect back to the post viewer
+        # it all looks good, insert the comment into the blog post and redirect
+        # back to the post viewer
         posts.add_comment(permalink, name, email, body)
 
         bottle.redirect("/post/" + permalink)
@@ -116,7 +116,8 @@ def post_not_found():
     return "Sorry, post not found"
 
 
-# Displays the form allowing a user to add a new post. Only works for logged in users
+# Displays the form allowing a user to add a new post. Only works for
+# logged in users
 @bottle.get('/newpost')
 def get_newpost():
 
@@ -125,11 +126,13 @@ def get_newpost():
     if username is None:
         bottle.redirect("/login")
 
-    return bottle.template("newpost_template", dict(subject="", body = "", errors="", tags="", username=username))
+    return bottle.template("newpost_template", dict(subject="", body="", errors="", tags="", username=username))
 
 #
 # Post handler for setting up a new post.
 # Only works for logged in user.
+
+
 @bottle.post('/newpost')
 def post_newpost():
     title = bottle.request.forms.get("subject")
@@ -170,9 +173,11 @@ def present_signup():
                            dict(username="", password="",
                                 password_error="",
                                 email="", username_error="", email_error="",
-                                verify_error =""))
+                                verify_error=""))
 
 # displays the initial blog login form
+
+
 @bottle.get('/login')
 def present_login():
     return bottle.template("login",
@@ -180,6 +185,8 @@ def present_login():
                                 login_error=""))
 
 # handles a login request
+
+
 @bottle.post('/login')
 def process_login():
 
@@ -214,7 +221,7 @@ def process_login():
 @bottle.get('/internal_error')
 @bottle.view('error_template')
 def present_internal_error():
-    return {'error':"System has encountered a DB error"}
+    return {'error': "System has encountered a DB error"}
 
 
 @bottle.get('/logout')
@@ -225,7 +232,6 @@ def process_logout():
     sessions.end_session(cookie)
 
     bottle.response.set_cookie("session", "")
-
 
     bottle.redirect("/signup")
 
@@ -244,7 +250,8 @@ def process_signup():
 
         if not users.add_user(username, password, email):
             # this was a duplicate
-            errors['username_error'] = "Username already in use. Please choose another"
+            errors[
+                'username_error'] = "Username already in use. Please choose another"
             return bottle.template("signup", errors)
 
         session_id = sessions.start_session(username)
@@ -254,7 +261,6 @@ def process_signup():
     else:
         print "user did not validate"
         return bottle.template("signup", errors)
-
 
 
 @bottle.get("/welcome")
@@ -270,15 +276,15 @@ def present_welcome():
     return bottle.template("welcome", {'username': username})
 
 
-
 # Helper Functions
 
-#extracts the tag from the tags form element. an experience python programmer could do this in  fewer lines, no doubt
+# extracts the tag from the tags form element. an experience python
+# programmer could do this in  fewer lines, no doubt
 def extract_tags(tags):
 
     whitespace = re.compile('\s')
 
-    nowhite = whitespace.sub("",tags)
+    nowhite = whitespace.sub("", tags)
     tags_array = nowhite.split(',')
 
     # let's clean it up
@@ -303,7 +309,8 @@ def validate_signup(username, password, verify, email, errors):
     errors['email_error'] = ""
 
     if not USER_RE.match(username):
-        errors['username_error'] = "invalid username. try just letters and numbers"
+        errors[
+            'username_error'] = "invalid username. try just letters and numbers"
         return False
 
     if not PASS_RE.match(password):
@@ -328,5 +335,5 @@ sessions = sessionDAO.SessionDAO(database)
 
 
 bottle.debug(True)
-bottle.run(host='localhost', port=8082)         # Start the webserver running and wait for requests
-
+# Start the webserver running and wait for requests
+bottle.run(host='localhost', port=8082)

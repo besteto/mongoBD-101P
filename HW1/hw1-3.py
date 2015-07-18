@@ -1,5 +1,3 @@
-
-
 import pymongo
 import bottle
 import sys
@@ -20,11 +18,10 @@ def get_hw1(n):
     db = connection.m101                 # attach to db
     collection = db.funnynumbers         # specify the colllection
 
-
     magic = 0
 
     try:
-        iter = collection.find({},limit=1, skip=n).sort('value', direction=1)
+        iter = collection.find({}, limit=1, skip=n).sort('value', direction=1)
         for item in iter:
             return str(int(item['value'])) + "\n"
     except Exception as e:
@@ -33,5 +30,3 @@ def get_hw1(n):
 
 bottle.debug(True)
 bottle.run(host='localhost', port=8080)
-
-
