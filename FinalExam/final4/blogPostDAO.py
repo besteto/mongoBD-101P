@@ -23,8 +23,8 @@ import re
 import datetime
 
 
-
-# The Blog Post Data Access Object handles interactions with the Posts collection
+# The Blog Post Data Access Object handles interactions with the Posts
+# collection
 class BlogPostDAO:
 
     # constructor for the class
@@ -38,16 +38,16 @@ class BlogPostDAO:
 
         # fix up the permalink to not include whitespace
 
-        exp = re.compile('\W') # match anything not alphanumeric
+        exp = re.compile('\W')  # match anything not alphanumeric
         whitespace = re.compile('\s')
-        temp_title = whitespace.sub("_",title)
+        temp_title = whitespace.sub("_", title)
         permalink = exp.sub('', temp_title)
 
         # Build a new post
         post = {"title": title,
                 "author": author,
                 "body": post,
-                "permalink":permalink,
+                "permalink": permalink,
                 "tags": tags_array,
                 "comments": [],
                 "date": datetime.datetime.utcnow()}
@@ -69,30 +69,34 @@ class BlogPostDAO:
         l = []
 
         for post in cursor:
-            post['date'] = post['date'].strftime("%A, %B %d %Y at %I:%M%p") # fix up date
+            post['date'] = post['date'].strftime(
+                "%A, %B %d %Y at %I:%M%p")  # fix up date
             if 'tags' not in post:
-                post['tags'] = [] # fill it in if its not there already
+                post['tags'] = []  # fill it in if its not there already
             if 'comments' not in post:
                 post['comments'] = []
 
-            l.append({'title':post['title'], 'body':post['body'], 'post_date':post['date'],
-                      'permalink':post['permalink'],
-                      'tags':post['tags'],
-                      'author':post['author'],
-                      'comments':post['comments']})
+            l.append({'title': post['title'], 'body': post['body'], 'post_date': post['date'],
+                      'permalink': post['permalink'],
+                      'tags': post['tags'],
+                      'author': post['author'],
+                      'comments': post['comments']})
 
         return l
 
     # returns an array of num_posts posts, reverse ordered, filtered by tag
     def get_posts_by_tag(self, tag, num_posts):
 
-        cursor = self.posts.find({'tags':tag}).sort('date', direction=-1).limit(num_posts)
+        cursor = self.posts.find({'tags': tag}).sort(
+            'date', direction=-1).limit(num_posts)
         l = []
 
         for post in cursor:
-            post['date'] = post['date'].strftime("%A, %B %d %Y at %I:%M%p")     # fix up date
+            post['date'] = post['date'].strftime(
+                "%A, %B %d %Y at %I:%M%p")     # fix up date
             if 'tags' not in post:
-                post['tags'] = []           # fill it in if its not there already
+                # fill it in if its not there already
+                post['tags'] = []
             if 'comments' not in post:
                 post['comments'] = []
 
@@ -110,12 +114,14 @@ class BlogPostDAO:
         post = self.posts.find_one({'permalink': permalink})
 
         # XXX Final exam Question 4
-        # 
+        #
         # if you store the likes value in the way the template expects
-        # and how is implied by by the fixup code below, you don't need to make a change here
+        # and how is implied by by the fixup code below, you don't need to make
+        # a change here
 
         if post is not None:
-            # fix up likes values. set to zero if data is not present for comments that have never been liked
+            # fix up likes values. set to zero if data is not present for
+            # comments that have never been liked
             for comment in post['comments']:
                 if 'num_likes' not in comment:
                     comment['num_likes'] = 0
@@ -139,28 +145,23 @@ class BlogPostDAO:
             last_error = self.posts.update({'permalink': permalink}, {'$push': {'comments': comment}}, upsert=False,
                                            manipulate=False, safe=True)
 
-            return last_error['n']          # return the number of documents updated
+            # return the number of documents updated
+            return last_error['n']
 
         except:
             print "Could not update the collection, error"
             print "Unexpected error:", sys.exc_info()[0]
             return 0
 
-    # increments the number of likes on a particular comment. Returns the number of documented updated
+    # increments the number of likes on a particular comment. Returns the
+    # number of documented updated
     def increment_likes(self, permalink, comment_ordinal):
 
         #
-        # XXX Final exam 
+        # XXX Final exam
         # Work here. You need to update the num_likes value in the comment being liked
-        # 
-        posts.update({'permalink':permalink}, {'$inc': {'comments.' + comment_ordinal + '.num_likes': 1}});
+        #
+        posts.update({'permalink': permalink}, {
+                     '$inc': {'comments.' + comment_ordinal + '.num_likes': 1}})
 
         return 0
-
-
-
-
-
-
-
-
